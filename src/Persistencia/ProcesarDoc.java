@@ -28,7 +28,7 @@ public class ProcesarDoc {
                     } else if (caracter == '\\') {
                         if (leyendo) {
                             String p = palabra.toString().trim().toLowerCase();
-                            if (!p.isEmpty()) {
+                            if (!p.isEmpty() && p.length() <= 20) {
                                 arbol.insertar(p, pagina);
                             }
                             palabra.setLength(0);

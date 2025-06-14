@@ -20,14 +20,15 @@ public class Main {
         boolean ejecutando = true;
 
         while (ejecutando) {
-            System.out.println("\nOpciones de consulta:");
+            System.out.println("Opciones de consulta:");
             System.out.println("1. Buscar páginas de palabra o frase");
             System.out.println("2. Buscar páginas donde aparecen ambas palabras o frases");
             System.out.println("3. Buscar páginas donde aparece al menos una palabra o frase");
             System.out.println("4. Finalizar");
             System.out.print("Ingrese la opción que desea: ");
+            String entrada = sc.next();
 
-            String entrada = sc.nextLine();
+            // Aqui se etsa validando la opción que nos dé el ususario o tendrá una excepción
             int op = -1;
             boolean opcionValida = false;
 
