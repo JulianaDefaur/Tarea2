@@ -2,21 +2,17 @@ package Vista;
 
 import modelo.AVL;
 import Persistencia.ProcesarDoc;
-import Exception.Excepcion;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         AVL arbol = new AVL();
-        int pagina = 1;
         ProcesarDoc doc = new ProcesarDoc(arbol);
         doc.procesarDoc("src/Persistencia/Documento");
 
-        System.out.println("Índice cargado.");
+        System.out.println("::Índice::");
         arbol.imprimirIndice();
 
         Scanner sc = new Scanner(System.in);

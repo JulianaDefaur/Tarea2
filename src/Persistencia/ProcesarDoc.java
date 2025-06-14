@@ -1,6 +1,7 @@
 package Persistencia;
-import java.io.File;
-import java.util.Scanner;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import modelo.*;
 
 public class ProcesarDoc {
@@ -11,28 +12,35 @@ public class ProcesarDoc {
     }
 
     public void procesarDoc(String rutaArchivo) {
-        try (Scanner sc = new Scanner(new File(rutaArchivo))) {
-            int pagina = 1;
-            while (sc.hasNextLine()) {
-                String linea = sc.nextLine();
+        int pagina = 1;
 
-                if (linea.equals("|")) {
-                    pagina++;
-                    continue;
-                }
+        try (BufferedReader doc = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea;
+            boolean leyendo = false;
+            StringBuilder palabra = new StringBuilder();
 
-                int start = 0;
-                while ((start = linea.indexOf("\\", start)) != -1) {
-                    int end = linea.indexOf("\\", start + 1);
-                    if (end == -1) break;
-                    String frase = linea.substring(start + 1, end).toLowerCase();
-                    arbol.insertar(frase, pagina);
-                    start = end + 1;
+            while ((linea = doc.readLine()) != null) {
+                for (int i = 0; i < linea.length(); i++) {
+                    char caracter = linea.charAt(i);
+
+                    if (caracter == '|') {
+                        pagina++;
+                    } else if (caracter == '\\') {
+                        if (leyendo) {
+                            String p = palabra.toString().trim().toLowerCase();
+                            if (!p.isEmpty()) {
+                                arbol.insertar(p, pagina);
+                            }
+                            palabra.setLength(0);
+                        }
+                        leyendo = !leyendo;
+                    } else if (leyendo) {
+                        palabra.append(caracter);
+                    }
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error al procesar el archivo: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error!! al procesar el archivo: " + e.getMessage());
         }
     }
 }
