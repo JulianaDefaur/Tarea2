@@ -114,6 +114,7 @@
 package Vista;
 
 import modelo.AVL;
+import Persistencia.ProcesarDoc;
 import Exception.Excepcion;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -125,36 +126,8 @@ public class Main {
     public static void main(String[] args) {
         AVL arbol = new AVL();
         int pagina = 1;
-
-        try (BufferedReader br = new BufferedReader(new FileReader("src/Persistencia/Documento"))) {
-            String linea;
-            boolean leyendo = false;
-            StringBuilder palabra = new StringBuilder();
-
-            while ((linea = br.readLine()) != null) {
-                for (int i = 0; i < linea.length(); i++) {
-                    char c = linea.charAt(i);
-                    if (c == '|') {
-                        pagina++;
-                        continue;
-                    }
-                    if (c == '\\') {
-                        if (leyendo) {
-                            String p = palabra.toString().trim().toLowerCase();
-                            if (!p.isEmpty() && p.length() <= 20) {
-                                arbol.insertar(p, pagina);
-                            }
-                            palabra.setLength(0);
-                        }
-                        leyendo = !leyendo;
-                    } else if (leyendo) {
-                        palabra.append(c);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new Excepcion("Error leyendo el archivo: " + e.getMessage());
-        }
+        ProcesarDoc doc = new ProcesarDoc(arbol);
+        doc.procesarDoc("src/Persistencia/Documento");
 
         System.out.println("Índice cargado.");
         arbol.imprimirIndice();
