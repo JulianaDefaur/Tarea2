@@ -2,7 +2,7 @@ package modelo;
 
 public class Nodo {
     String palabra;
-    NodoPagina raizPaginas; // AVL para páginas
+    NodoPagina raizPaginas;
     Nodo izq, der;
     int altura;
 
