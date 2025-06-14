@@ -1,0 +1,6 @@
+Un \arbol binario\ es un \arbol\ el cual es un \arbol\ en el cual cada \nodo\ tiene a
+lo mas dos hijos. Estos arboles son muy faciles de implementar
+en un lenguaje de programacion como \Java\. |
+Un \arbol de busqueda binario\ es un \arbol binario\
+en que los elementos almacenados en el se cumplen las siguientes
+\re
