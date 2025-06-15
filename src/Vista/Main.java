@@ -20,7 +20,6 @@ public class Main {
         boolean continuarEjecutando = true;
 
         while (continuarEjecutando) {
-            // Menú interactivo para realizar búsquedas
             System.out.println("::::::::::::::::::::::::::::::::Menú::::::::::::::::::::::::::::::::");
             System.out.println("1) Buscar páginas de una palabra o frase");
             System.out.println("2) Buscar páginas donde aparecen ambas palabras o frases");
@@ -43,7 +42,7 @@ public class Main {
                     }
                 }
 
-                case "2" -> { // Buscar páginas donde aparecen ambas palabras o frases (la intersección)
+                case "2" -> { // Buscar páginas donde aparecen ambas palabras o frases para la intersección
                     System.out.print("Ingrese palabra o frase 1: ");
                     String palabra1 = scanner.nextLine().trim().toLowerCase();
 
@@ -59,7 +58,7 @@ public class Main {
                     }
                 }
 
-                case "3" -> { // Buscar páginas donde aparece al menos una palabra o frase (unión)
+                case "3" -> { // Buscar páginas donde aparece al menos una palabra o frase para la unión
                     System.out.print("Ingrese palabra o frase 1: ");
                     String palabra1 = scanner.nextLine().trim().toLowerCase();
 
@@ -77,7 +76,7 @@ public class Main {
 
                 case "4" -> { // Finalizar
                     System.out.println("Finalizando...");
-                    continuarEjecutando = false; // sale del ciclo
+                    continuarEjecutando = false; //sale del ciclo
                 }
 
                 default -> {

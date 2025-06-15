@@ -34,12 +34,12 @@ public class ProcesarDoc {
                             if (!p.isEmpty() && p.length() <= 20) {
                                 arbol.insertar(p, pagina); // Inserta en el árbol con la página actual
                             }
-                            palabra = ""; // Limpia la palabra para pasar a la siguiente
+                            palabra = ""; // limpia la palabra o frase para pasar a la siguiente palabra o frase
                         }
-                        leyendo = !leyendo; // Cambia el estado: empieza o termina de leer palabra
+                        leyendo = !leyendo;
 
                     } else if (leyendo) {
-                        palabra += caracter; // Mientras se está leyendo, acumula los caracteres
+                        palabra += caracter; // mientras se está leyendo, acumula los caracteres
                     }
                 }
             }
