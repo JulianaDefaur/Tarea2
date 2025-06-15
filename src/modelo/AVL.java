@@ -1,10 +1,21 @@
 package modelo;
 
 import java.util.*;
-
 public class AVL {
     private Nodo raiz;
 
+    // Retorna el arreglo de las paginas y frecuencias del parámetro
+    public int[] obtenerPaginasDe(String palabra){
+        Nodo n = buscarNodo(palabra);
+        if (n != null && n.p.length > 0) return n.p;
+        return null;
+    }
+
+    private Nodo buscarNodo(String palabra){
+        return buscar(raiz, palabra);
+    }
+
+    //____________________________________________
     public void insertar(String palabra, int pagina) {
         raiz = insertar(raiz, palabra.toLowerCase(), pagina);
     }
@@ -24,11 +35,19 @@ public class AVL {
     }
 
     private int altura(Nodo n) {
-        return (n == null) ? 0 : n.altura;
+        if (n == null) {
+            return 0;
+        } else {
+            return n.altura;
+        }
     }
 
-    private int balance(Nodo n) {
-        return (n == null) ? 0 : altura(n.izq) - altura(n.der);
+    private int calcularBalance(Nodo n) {
+        if (n == null) {
+            return 0;
+        } else {
+            return altura(n.izq) - altura(n.der);
+        }
     }
 
     private Nodo rotarDerecha(Nodo y) {
@@ -58,16 +77,16 @@ public class AVL {
     }
 
     private Nodo balancear(Nodo n) {
-        int balance = balance(n);
+        int balance = calcularBalance(n);
 
         if (balance > 1) {
-            if (balance(n.izq) < 0)
+            if (calcularBalance(n.izq) < 0)
                 n.izq = rotarIzquierda(n.izq);
             return rotarDerecha(n);
         }
 
         if (balance < -1) {
-            if (balance(n.der) > 0)
+            if (calcularBalance(n.der) > 0)
                 n.der = rotarDerecha(n.der);
             return rotarIzquierda(n);
         }
@@ -79,7 +98,7 @@ public class AVL {
         Map<Character, List<String>> indice = new TreeMap<>();
         construirIndice(raiz, indice);
         for (char letra : indice.keySet()) {
-            System.out.println("-" + Character.toUpperCase(letra) + "-");
+            System.out.println("\n-" + Character.toUpperCase(letra) + "-");
             for (String entrada : indice.get(letra)) {
                 System.out.println(entrada);
             }

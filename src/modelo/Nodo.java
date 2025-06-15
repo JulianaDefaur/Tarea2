@@ -1,8 +1,11 @@
 package modelo;
 
+import java.util.*;
+
 public class Nodo {
     String palabra;
     NodoPagina raizPaginas;
+    int[] p; // Esto representa las paginas {0, 3, 0, 6, 0}
     Nodo izq, der;
     int altura;
 
@@ -10,8 +13,36 @@ public class Nodo {
         this.palabra = palabra;
         this.raizPaginas = insertarPagina(null, pagina);
         this.altura = 1;
+        this.sumarPagina(pagina);
     }
 
+    @Override
+    public String toString(){
+        String sb = " ";
+        for (int i = 0; i < p.length; i++) {
+            if (p[i] > 0) {
+                sb = sb+(" "+i);
+                if (p[i] > 1) sb = sb+("("+p[i]+") ");
+                sb += " ";
+            }
+        }
+        return palabra+sb;
+    }
+
+    // Aumenta la frecuencia de la palabra en una pagina dada
+    public void sumarPagina(int pagina){
+        if (pagina < 1) return;
+        if (p == null) p = new int[pagina];
+        // Como el tamaño de p es limitado, debemos expandirlo si no existe el índice
+        // Por ejemplo, si queremos aumentar la frecuencia en la pagina 5 cuando p solo nos
+        // Permite 3 paginas, debemos aumentar el tamaño
+        if (p.length <= pagina)
+            p = Arrays.copyOf(p, pagina+1);
+        p[pagina]++;
+    }
+
+
+    // ________________________________________________________
     public NodoPagina insertarPagina(NodoPagina nodo, int pagina) {
         if (nodo == null) return new NodoPagina(pagina);
         if (pagina < nodo.pagina)
@@ -28,12 +59,21 @@ public class Nodo {
     }
 
     public int alturaPagina(NodoPagina n) {
-        return (n == null) ? 0 : n.altura;
+        if (n == null) {
+            return 0;
+        } else {
+            return n.altura;
+        }
     }
 
     public int balancePagina(NodoPagina n) {
-        return (n == null) ? 0 : alturaPagina(n.izq) - alturaPagina(n.der);
+        if (n == null) {
+            return 0;
+        } else {
+            return alturaPagina(n.izq) - alturaPagina(n.der);
+        }
     }
+
 
     public NodoPagina rotarDerechaPagina(NodoPagina y) {
         NodoPagina x = y.izq;
