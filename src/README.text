@@ -31,9 +31,16 @@ Después de mostrar el índice, el programa presenta un menú con las siguientes
 
 2) Buscar páginas donde aparecen ambas palabras o frases
    Permite ingresar dos palabras o frases. Se listarán las páginas donde AMBAS aparecen al mismo tiempo.
+   (las paginas serán separdas por un espacio)
+
+   Ej: Pag1 Pag2 Pag3
 
 3) Buscar páginas donde aparece al menos una palabra o frase
    Permite ingresar dos palabras o frases. Se mostrarán todas las páginas donde aparece AL MENOS UNA de ellas.
+   (las paginas serán separdas por un espacio)
+
+   Ej: Pag1 Pag2 Pag3
+
 
 4) Finalizar
    Termina la ejecución del programa.
