@@ -15,11 +15,12 @@ public class Main {
         procesador.procesarDoc("src/Persistencia/Documento"); // se procesa el archivo de entrada, extrayendo las palabras o frases
 
         System.out.println("::::::Índice::::::"); // se imprime el índice generado por el árbol
-        avl.imprimirIndice(); // muestra el índice completo con encabezados por letra y páginas asociadas
+        avl.mostrarIndice(); // muestra el índice completo con encabezados por letra y páginas asociadas
 
         boolean continuarEjecutando = true;
 
         while (continuarEjecutando) {
+            System.out.println(" ");
             System.out.println("::::::::::::::::::::::::::::::::Menú::::::::::::::::::::::::::::::::");
             System.out.println("1) Buscar páginas de una palabra o frase");
             System.out.println("2) Buscar páginas donde aparecen ambas palabras o frases");
@@ -38,7 +39,15 @@ public class Main {
                     if (paginasEncontradas == null) {
                         System.out.println("No se encontró la palabra o frase");
                     } else {
-                        System.out.println("La palabra o frase aparece en la/s página/s: " + Arrays.toString(paginasEncontradas));
+                        System.out.print("La palabra o frase aparece en la/s página/s: ");
+                        for (int i = 0; i < paginasEncontradas.length; i++) {
+                            if (paginasEncontradas[i] > 0) {
+                                System.out.print(i);
+                                if (paginasEncontradas[i] > 1) System.out.print(" ("+paginasEncontradas[i]+" veces)");
+                                if (i < paginasEncontradas.length-1) System.out.print(", ");
+                            }
+                        }
+                        System.out.println();
                     }
                 }
 
@@ -49,12 +58,21 @@ public class Main {
                     System.out.print("Ingrese palabra o frase 2: ");
                     String palabra2 = scanner.nextLine().trim().toLowerCase();
 
+                    if (palabra1.equals(palabra2)) {
+                        System.out.println("Ingrese palabras distintas, por favor");
+                        continue;
+                    }
+
                     List<Integer> paginasAmbas = avl.buscarInterseccion(palabra1, palabra2); // páginas comunes
 
                     if (paginasAmbas.isEmpty()) {
                         System.out.println("No hay páginas donde aparezcan ambas palabras o frases");
                     } else {
-                        System.out.println("Aparecen ambas palabras o frases en páginas: " + paginasAmbas);
+                        System.out.print("Aparecen ambas palabras o frases en páginas: ");
+                        for (Integer p : paginasAmbas) {
+                            System.out.print(p+" ");
+                        }
+                        System.out.println();
                     }
                 }
 
@@ -65,12 +83,21 @@ public class Main {
                     System.out.print("Ingrese palabra o frase 2: ");
                     String palabra2 = scanner.nextLine().trim().toLowerCase();
 
+                    if (palabra1.equals(palabra2)) {
+                        System.out.println("Ingrese palabras distintas, por favor");
+                        continue;
+                    }
+
                     List<Integer> paginasUnion = avl.buscarUnion(palabra1, palabra2); // combinación de ambas
 
                     if (paginasUnion.isEmpty()) {
                         System.out.println("No hay páginas donde aparezca alguna de las palabras o frases");
                     } else {
-                        System.out.println("Aparece al menos una palabra o frase en páginas: " + paginasUnion);
+                        System.out.print("Aparece al menos una palabra o frase en páginas: ");
+                        for (Integer p : paginasUnion) {
+                            System.out.print(p+" ");
+                        }
+                        System.out.println();
                     }
                 }
 

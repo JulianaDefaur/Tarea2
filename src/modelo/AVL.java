@@ -1,22 +1,30 @@
+// Benjamin Bravo y Juliana Defaur
 package modelo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AVL {
     private Nodo raiz;
 
     public void insertar(String palabra, int pagina) {
-        raiz = insertar(raiz, palabra.toLowerCase(), pagina);
+        raiz = insertar(raiz, new Nodo(palabra.toLowerCase()), pagina);
     }
 
-    private Nodo insertar(Nodo nodo, String palabra, int pagina) {
-        if (nodo == null) return new Nodo(palabra, pagina);
-        int cmp = palabra.compareTo(nodo.palabra);
-        if (cmp < 0)
-            nodo.izq = insertar(nodo.izq, palabra, pagina);
-        else if (cmp > 0)
-            nodo.der = insertar(nodo.der, palabra, pagina);
-        else
-            nodo.agregarPagina(pagina);
+    private Nodo insertar(Nodo nodo, Nodo nuevo, int pagina) {
+        if (nodo == null) {
+            nuevo.aumentarFrecuencia(pagina);
+            return nuevo;
+        }
+
+        int cmp = nuevo.palabra.compareTo(nodo.palabra);
+        if (cmp < 0) {
+            nodo.izq = insertar(nodo.izq, nuevo, pagina);
+        } else if (cmp > 0) {
+            nodo.der = insertar(nodo.der, nuevo, pagina);
+        } else {
+            nodo.aumentarFrecuencia(pagina);
+        }
 
         nodo.altura = 1 + Math.max(altura(nodo.izq), altura(nodo.der));
         return balancear(nodo);
@@ -25,23 +33,19 @@ public class AVL {
     private int altura(Nodo n) {
         if (n == null) {
             return 0;
-        } else {
-            return n.altura;
         }
+        return n.altura;
     }
 
     private int calcularBalance(Nodo n) {
         if (n == null) {
             return 0;
-        } else {
-            return altura(n.izq) - altura(n.der);
         }
+        return altura(n.izq) - altura(n.der);
     }
-
     private Nodo rotarDerecha(Nodo y) {
         Nodo x = y.izq;
         Nodo T2 = x.der;
-
         x.der = y;
         y.izq = T2;
 
@@ -54,112 +58,78 @@ public class AVL {
     private Nodo rotarIzquierda(Nodo x) {
         Nodo y = x.der;
         Nodo T2 = y.izq;
-
         y.izq = x;
         x.der = T2;
 
         x.altura = Math.max(altura(x.izq), altura(x.der)) + 1;
         y.altura = Math.max(altura(y.izq), altura(y.der)) + 1;
-
         return y;
     }
 
     private Nodo balancear(Nodo n) {
         int balance = calcularBalance(n);
-
         if (balance > 1) {
-            if (calcularBalance(n.izq) < 0)
+            if (calcularBalance(n.izq) < 0) {
                 n.izq = rotarIzquierda(n.izq);
+            }
             return rotarDerecha(n);
         }
-
         if (balance < -1) {
-            if (calcularBalance(n.der) > 0)
+            if (calcularBalance(n.der) > 0) {
                 n.der = rotarDerecha(n.der);
+            }
             return rotarIzquierda(n);
         }
-
         return n;
     }
 
-    public void imprimirIndice() {
-        Map<Character, List<String>> indice = new TreeMap<>();
-        construirIndice(raiz, indice);
-        for (char letra : indice.keySet()) {
-            System.out.println("\n-" + Character.toUpperCase(letra) + "-");
-            for (String entrada : indice.get(letra)) {
-                System.out.println(entrada);
+    public void mostrarIndice() {
+        char[] letraActual = {0}; // letra anterior
+        imprimirInOrden(raiz, letraActual);
+    }
+
+    private void imprimirInOrden(Nodo nodo, char[] letraAnterior) {
+        if (nodo == null) return;
+        imprimirInOrden(nodo.izq, letraAnterior);
+
+        char inicial = Character.toUpperCase(nodo.palabra.charAt(0));
+        if (letraAnterior[0] != inicial) {
+            letraAnterior[0] = inicial;
+            System.out.println("\n  -" + inicial + "-");
+        }
+        System.out.println(formatearPalabraYPaginas(nodo.palabra, nodo.p));
+        imprimirInOrden(nodo.der, letraAnterior);
+    }
+
+    private String formatearPalabraYPaginas(String palabra, int[] p) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ponerMayusculaInicial(palabra)).append(" ");
+        List<String> paginas = new ArrayList<>();
+        for (int i = 1; i < p.length; i++) {
+            if (p[i] > 0) {
+                if (p[i] == 1) paginas.add(String.valueOf(i));
+                else paginas.add(i + "(" + p[i] + ")");
             }
         }
-    }
-
-    private void construirIndice(Nodo nodo, Map<Character, List<String>> indice) {
-        if (nodo == null) return;
-        construirIndice(nodo.izq, indice);
-        String palabra = nodo.palabra;
-        List<String> lista = indice.computeIfAbsent(palabra.charAt(0), k -> new ArrayList<>());
-        lista.add(formatearEntrada(palabra, nodo.raizPaginas));
-        construirIndice(nodo.der, indice);
-    }
-
-    private String formatearEntrada(String palabra, NodoPagina raiz) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(capitalizar(palabra)).append(" ");
-        List<String> paginas = new ArrayList<>();
-        formatearPaginas(raiz, paginas);
         sb.append(String.join(", ", paginas));
         return sb.toString();
     }
 
-    private void formatearPaginas(NodoPagina nodo, List<String> paginas) {
-        if (nodo == null) return;
-        formatearPaginas(nodo.izq, paginas);
-        if (nodo.frecuencia == 1)
-            paginas.add(String.valueOf(nodo.pagina));
-        else
-            paginas.add(nodo.pagina + "(" + nodo.frecuencia + ")");
-        formatearPaginas(nodo.der, paginas);
-    }
-
-    private String capitalizar(String palabra) {
+    private String ponerMayusculaInicial(String palabra) {
         if (palabra == null || palabra.isEmpty()) return palabra;
-        String[] partes = palabra.split(" ");
+        String[] partes = palabra.split("\\s+");
         StringBuilder resultado = new StringBuilder();
         for (String parte : partes) {
-            if (!parte.isEmpty()) {
-                resultado.append(Character.toUpperCase(parte.charAt(0)))
-                        .append(parte.substring(1))
-                        .append(" ");
-            }
+            resultado.append(Character.toUpperCase(parte.charAt(0)))
+                    .append(parte.substring(1))
+                    .append(" ");
         }
         return resultado.toString().trim();
     }
 
-    // Retorna el arreglo de las paginas y frecuencias del parámetro
-    public int[] obtenerPaginasDe(String palabra){
-        Nodo n = buscarNodo(palabra);
-        if (n != null && n.p.length > 0) return n.p;
-        return null;
-    }
 
-    private Nodo buscarNodo(String palabra){
-        return buscar(raiz, palabra);
-    }
-
-    public List<Integer> buscarPaginas(String palabra) {
-        Nodo nodo = buscar(raiz, palabra.toLowerCase());
-        List<Integer> resultado = new ArrayList<>();
-        if (nodo != null) {
-            inorderPaginas(nodo.raizPaginas, resultado);
-        }
-        return resultado;
-    }
-
-    private void inorderPaginas(NodoPagina nodo, List<Integer> resultado) {
-        if (nodo == null) return;
-        inorderPaginas(nodo.izq, resultado);
-        resultado.add(nodo.pagina);
-        inorderPaginas(nodo.der, resultado);
+    public Nodo buscar(String palabra) {
+        return buscar(raiz, palabra.toLowerCase());
     }
 
     private Nodo buscar(Nodo nodo, String palabra) {
@@ -167,45 +137,41 @@ public class AVL {
         int cmp = palabra.compareTo(nodo.palabra);
         if (cmp == 0) return nodo;
         return (cmp < 0) ? buscar(nodo.izq, palabra) : buscar(nodo.der, palabra);
+
+    }
+
+    public int[] obtenerPaginasDe(String palabra) {
+        Nodo n = buscar(palabra);
+        return (n != null) ? n.p : null;
     }
 
     public List<Integer> buscarInterseccion(String w1, String w2) {
-        List<Integer> p1 = buscarPaginas(w1);
-        List<Integer> p2 = buscarPaginas(w2);
-        List<Integer> res = new ArrayList<>();
-        int i = 0, j = 0;
-        while (i < p1.size() && j < p2.size()) {
-            if (p1.get(i).equals(p2.get(j))) {
-                res.add(p1.get(i));
-                i++;
-                j++;
-            } else if (p1.get(i) < p2.get(j)) {
-                i++;
-            } else {
-                j++;
+        int[] p1 = obtenerPaginasDe(w1);
+        int[] p2 = obtenerPaginasDe(w2);
+
+        int max = Math.min((p1 != null ? p1.length : 0), (p2 != null ? p2.length : 0));
+        List<Integer> out = new ArrayList<>();
+        for (int i = 1; i < max; i++) {
+            if (p1[i] > 0 && p2[i] > 0) {
+                out.add(i);
             }
         }
-        return res;
+        return out;
     }
 
     public List<Integer> buscarUnion(String w1, String w2) {
-        List<Integer> p1 = buscarPaginas(w1);
-        List<Integer> p2 = buscarPaginas(w2);
-        List<Integer> res = new ArrayList<>();
-        int i = 0, j = 0;
-        while (i < p1.size() && j < p2.size()) {
-            if (p1.get(i).equals(p2.get(j))) {
-                res.add(p1.get(i));
-                i++;
-                j++;
-            } else if (p1.get(i) < p2.get(j)) {
-                res.add(p1.get(i++));
-            } else {
-                res.add(p2.get(j++));
-            }
+        int[] p1 = obtenerPaginasDe(w1);
+        int[] p2 = obtenerPaginasDe(w2);
+
+        int max = Math.max((p1 != null ? p1.length : 0), (p2 != null ? p2.length : 0));
+        List<Integer> out = new ArrayList<>();
+        for (int i = 1; i < max; i++) {
+            boolean aparece = (p1 != null && i < p1.length && p1[i] > 0)
+                    || (p2 != null && i < p2.length && p2[i] > 0);
+            if (aparece) out.add(i);
         }
-        while (i < p1.size()) res.add(p1.get(i++));
-        while (j < p2.size()) res.add(p2.get(j++));
-        return res;
+        return out;
     }
 }
+
+
