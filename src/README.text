@@ -45,4 +45,18 @@ Después de mostrar el índice, el programa presenta un menú con las siguientes
 4) Finalizar
    Termina la ejecución del programa.
 
+......OTRAS CLASES......
+
+PERSISTENCIA
+* ProcesarDoc: Esta es una clase de persistencia, por lo que su función en el código es para leer el documento adjunto en
+el cual se encuentran las palabras a utilizar en el código.
+
+MODELO
+* Nodo: Aquí se crean los nodos que estarán presentes en el AVL, al crear un nodo, este almacena la palabra ingresada,
+frecuencia por página, los hijos izquierdo y derecho del nodo, y la altura del nodo para determinar el balance en el AVL.
+Posee un constructor y un método para aumentar la frecuencia por página. Además de un método toString para su impresión.
+
+* AVL: Aqui se maneja lo que respecta a la creación del arbol AVL, teniendo metodos de inserción, búsqueda, rotación y
+balance. Además tiene métodos para la creación e impresión del índice. Y también, métodos para listar las paginas en las
+que se encuentra una palabra.
 ................................................................................................................................................................
