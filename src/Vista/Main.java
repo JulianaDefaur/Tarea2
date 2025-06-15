@@ -8,81 +8,82 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        AVL arbol = new AVL();
-        ProcesarDoc doc = new ProcesarDoc(arbol);
-        doc.procesarDoc("src/Persistencia/Documento");
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("::Índice::");
-        arbol.imprimirIndice();
+        AVL arbolIndice = new AVL();  // creamos un árbol AVL para guardar las palabras o frases
+        ProcesarDoc procesador = new ProcesarDoc(arbolIndice); // se crea el procesador del documento y se le pasa el árbol para llenarlo
+        procesador.procesarDoc("src/Persistencia/Documento"); // se procesa el archivo de entrada, extrayendo las palabras o frases
 
-        Scanner sc = new Scanner(System.in);
+        System.out.println("::::::Índice::::::"); // se imprime el índice generado por el árbol
+        arbolIndice.imprimirIndice(); // muestra el índice completo con encabezados por letra y páginas asociadas
 
-        boolean ejecutando = true;
+        boolean continuarEjecutando = true;
 
-        while (ejecutando) {
-            System.out.println("Opciones de consulta:");
-            System.out.println("1. Buscar páginas de palabra o frase");
-            System.out.println("2. Buscar páginas donde aparecen ambas palabras o frases");
-            System.out.println("3. Buscar páginas donde aparece al menos una palabra o frase");
-            System.out.println("4. Finalizar");
+        while (continuarEjecutando) {
+            // Menú interactivo para realizar búsquedas
+            System.out.println("::::::::::::::::::::::::::::::::Menú::::::::::::::::::::::::::::::::");
+            System.out.println("1) Buscar páginas de una palabra o frase");
+            System.out.println("2) Buscar páginas donde aparecen ambas palabras o frases");
+            System.out.println("3) Buscar páginas donde aparece al menos una palabra o frase");
+            System.out.println("4) Finalizar");
             System.out.print("Ingrese la opción que desea: ");
-            String entrada = sc.next();
+            String opcionUsuario = scanner.nextLine();
 
-            // Aqui se etsa validando la opción que nos dé el ususario o tendrá una excepción
-            int op = -1;
-            boolean opcionValida = false;
+            switch (opcionUsuario) {
+                case "1" -> { // Buscar páginas de una palabra o frase
+                    System.out.print("Ingrese palabra o frase: ");
+                    String palabra = scanner.nextLine().trim().toLowerCase(); // estandarizar entrada para coincidencias
 
-            try {
-                op = Integer.parseInt(entrada);
-                opcionValida = true;
-            } catch (NumberFormatException e) {
-                System.out.println("ERROR!! Opción inválida");
-            }
+                    List<Integer> paginasEncontradas = arbolIndice.buscarPaginas(palabra); // búsqueda exacta
 
-            if (opcionValida) {
-                switch (op) {
-                    case 1 -> {
-                        System.out.print("Ingrese palabra o frase-> ");
-                        String w = sc.nextLine().trim().toLowerCase();
-                        List<Integer> paginas = arbol.buscarPaginas(w);
-                        if (paginas.isEmpty()) {
-                            System.out.println("No se encontró la palabra o frase");
-                        } else {
-                            System.out.println("La palabra o frase aparece en la/s página/s " + paginas);
-                        }
+                    if (paginasEncontradas.isEmpty()) {
+                        System.out.println("No se encontró la palabra o frase");
+                    } else {
+                        System.out.println("La palabra o frase aparece en la/s página/s: " + paginasEncontradas);
                     }
-                    case 2 -> {
-                        System.out.print("Ingrese palabra o frase 1-> ");
-                        String w1 = sc.nextLine().trim().toLowerCase();
-                        System.out.print("Ingrese palabra o frase 2-> ");
-                        String w2 = sc.nextLine().trim().toLowerCase();
-                        List<Integer> paginas = arbol.buscarInterseccion(w1, w2);
-                        if (paginas.isEmpty()) {
-                            System.out.println("No hay páginas donde aparezcan ambas palabras o frases");
-                        } else {
-                            System.out.println("Aparecen ambas palabras o frases en páginas: " + paginas);
-                        }
+                }
+
+                case "2" -> { // Buscar páginas donde aparecen ambas palabras o frases (la intersección)
+                    System.out.print("Ingrese palabra o frase 1: ");
+                    String palabra1 = scanner.nextLine().trim().toLowerCase();
+
+                    System.out.print("Ingrese palabra o frase 2: ");
+                    String palabra2 = scanner.nextLine().trim().toLowerCase();
+
+                    List<Integer> paginasAmbas = arbolIndice.buscarInterseccion(palabra1, palabra2); // páginas comunes
+
+                    if (paginasAmbas.isEmpty()) {
+                        System.out.println("No hay páginas donde aparezcan ambas palabras o frases");
+                    } else {
+                        System.out.println("Aparecen ambas palabras o frases en páginas: " + paginasAmbas);
                     }
-                    case 3 -> {
-                        System.out.print("Ingrese palabra o frase 1-> ");
-                        String w1 = sc.nextLine().trim().toLowerCase();
-                        System.out.print("Ingrese palabra o frase 2-> ");
-                        String w2 = sc.nextLine().trim().toLowerCase();
-                        List<Integer> paginas = arbol.buscarUnion(w1, w2);
-                        if (paginas.isEmpty()) {
-                            System.out.println("No hay páginas donde aparezca alguna de las palabras o frases");
-                        } else {
-                            System.out.println("Aparece al menos una palabra o frase en páginas: " + paginas);
-                        }
+                }
+
+                case "3" -> { // Buscar páginas donde aparece al menos una palabra o frase (unión)
+                    System.out.print("Ingrese palabra o frase 1: ");
+                    String palabra1 = scanner.nextLine().trim().toLowerCase();
+
+                    System.out.print("Ingrese palabra o frase 2: ");
+                    String palabra2 = scanner.nextLine().trim().toLowerCase();
+
+                    List<Integer> paginasUnion = arbolIndice.buscarUnion(palabra1, palabra2); // combinación de ambas
+
+                    if (paginasUnion.isEmpty()) {
+                        System.out.println("No hay páginas donde aparezca alguna de las palabras o frases");
+                    } else {
+                        System.out.println("Aparece al menos una palabra o frase en páginas: " + paginasUnion);
                     }
-                    case 4 -> {
-                        System.out.println("Finalizando...");
-                        ejecutando = false;
-                    }
-                    default -> System.out.println("Opción inválida");
+                }
+
+                case "4" -> { // Finalizar
+                    System.out.println("Finalizando...");
+                    continuarEjecutando = false; // sale del ciclo
+                }
+
+                default -> {
+                    System.out.println("Opción inválida!!");
                 }
             }
         }
-
     }
 }
