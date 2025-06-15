@@ -1,3 +1,4 @@
+// Benjamin Bravo y Juliana Defaur
 package Vista;
 
 import modelo.AVL;
@@ -74,7 +75,7 @@ public class Main {
                     }
                 }
 
-                case "4" -> { // Finalizar
+                case "4" -> { // finalizar
                     System.out.println("Finalizando...");
                     continuarEjecutando = false; //sale del ciclo
                 }
