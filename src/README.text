@@ -1,1 +1,40 @@
-// explicar el codigo
+................................................................................................................................................................
+
+...................¿CÓMO EJECUTAR EL PROGRAMA?...................
+
+Para ejecutar el programa, simplemente corre la clase principal Main.java.
+El sistema está diseñado para leer automáticamente un archivo de texto ubicado en la siguiente ruta: src/Persistencia/Documento
+
+Una vez iniciado, el programa procesará el archivo, construirá un índice alfabético utilizando un árbol AVL y lo mostrará por pantalla.
+
+......¿CÓMO SE PRESENTA EL ÍNDICE?......
+
+El índice generado tiene la siguiente estructura:
+- Las palabras o frases se agrupan por su letra inicial, encabezadas por líneas como: -A-, -B-, -C-, etc.
+- Junto a cada palabra se indican los números de página donde aparece.
+- Si una palabra aparece varias veces en la misma página, se indica el número de repeticiones entre paréntesis.
+
+Ejemplo:
+-P-
+palabra 1: 1 (2), 3
+palabra 2: 2
+
+Esto significa que "palabra 1" aparece dos veces en la página 1 y una vez en la página 3, mientras que "palabra 2" aparece una vez en la página 2.
+
+......¿CÓMO USO EL MENÚ?......
+
+Después de mostrar el índice, el programa presenta un menú con las siguientes opciones:
+
+1) Buscar páginas de una palabra o frase
+   Permite ingresar una palabra o frase. El programa mostrará las páginas donde aparece.
+
+2) Buscar páginas donde aparecen ambas palabras o frases
+   Permite ingresar dos palabras o frases. Se listarán las páginas donde AMBAS aparecen al mismo tiempo.
+
+3) Buscar páginas donde aparece al menos una palabra o frase
+   Permite ingresar dos palabras o frases. Se mostrarán todas las páginas donde aparece AL MENOS UNA de ellas.
+
+4) Finalizar
+   Termina la ejecución del programa.
+
+................................................................................................................................................................
