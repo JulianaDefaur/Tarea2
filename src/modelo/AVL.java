@@ -4,18 +4,6 @@ import java.util.*;
 public class AVL {
     private Nodo raiz;
 
-    // Retorna el arreglo de las paginas y frecuencias del parámetro
-    public int[] obtenerPaginasDe(String palabra){
-        Nodo n = buscarNodo(palabra);
-        if (n != null && n.p.length > 0) return n.p;
-        return null;
-    }
-
-    private Nodo buscarNodo(String palabra){
-        return buscar(raiz, palabra);
-    }
-
-    //____________________________________________
     public void insertar(String palabra, int pagina) {
         raiz = insertar(raiz, palabra.toLowerCase(), pagina);
     }
@@ -145,6 +133,17 @@ public class AVL {
             }
         }
         return resultado.toString().trim();
+    }
+
+    // Retorna el arreglo de las paginas y frecuencias del parámetro
+    public int[] obtenerPaginasDe(String palabra){
+        Nodo n = buscarNodo(palabra);
+        if (n != null && n.p.length > 0) return n.p;
+        return null;
+    }
+
+    private Nodo buscarNodo(String palabra){
+        return buscar(raiz, palabra);
     }
 
     public List<Integer> buscarPaginas(String palabra) {

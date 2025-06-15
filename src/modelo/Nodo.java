@@ -16,33 +16,20 @@ public class Nodo {
         this.sumarPagina(pagina);
     }
 
-    @Override
-    public String toString(){
-        String sb = " ";
-        for (int i = 0; i < p.length; i++) {
-            if (p[i] > 0) {
-                sb = sb+(" "+i);
-                if (p[i] > 1) sb = sb+("("+p[i]+") ");
-                sb += " ";
-            }
-        }
-        return palabra+sb;
-    }
-
     // Aumenta la frecuencia de la palabra en una pagina dada
     public void sumarPagina(int pagina){
         if (pagina < 1) return;
-        if (p == null) p = new int[pagina];
         // Como el tamaño de p es limitado, debemos expandirlo si no existe el índice
         // Por ejemplo, si queremos aumentar la frecuencia en la pagina 5 cuando p solo nos
         // Permite 3 paginas, debemos aumentar el tamaño
-        if (p.length <= pagina)
-            p = Arrays.copyOf(p, pagina+1);
+        if (p == null) {
+            p = new int[pagina + 1];
+        } else if (p.length <= pagina) {
+            p = Arrays.copyOf(p, pagina + 1);
+        }
         p[pagina]++;
     }
 
-
-    // ________________________________________________________
     public NodoPagina insertarPagina(NodoPagina nodo, int pagina) {
         if (nodo == null) return new NodoPagina(pagina);
         if (pagina < nodo.pagina)
@@ -119,5 +106,18 @@ public class Nodo {
 
     public void agregarPagina(int pagina) {
         raizPaginas = insertarPagina(raizPaginas, pagina);
+    }
+
+    @Override
+    public String toString(){
+        String sb = " ";
+        for (int i = 0; i < p.length; i++) {
+            if (p[i] > 0) {
+                sb = sb+(" "+i);
+                if (p[i] > 1) sb = sb+("("+p[i+1]+") ");
+                sb += " ";
+            }
+        }
+        return palabra+sb;
     }
 }
