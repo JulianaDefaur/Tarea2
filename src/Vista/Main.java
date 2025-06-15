@@ -38,7 +38,15 @@ public class Main {
                     if (paginasEncontradas == null) {
                         System.out.println("No se encontró la palabra o frase");
                     } else {
-                        System.out.println("La palabra o frase aparece en la/s página/s: " + Arrays.toString(paginasEncontradas));
+                        System.out.print("La palabra o frase aparece en la/s página/s: ");
+                        for (int i = 0; i < paginasEncontradas.length; i++) {
+                            if (paginasEncontradas[i] > 0) {
+                                System.out.print(i);
+                                if (paginasEncontradas[i] > 1) System.out.print(" ("+paginasEncontradas[i]+" veces)");
+                                if (i < paginasEncontradas.length-1) System.out.print(", ");
+                            }
+                        }
+                        System.out.println();
                     }
                 }
 
@@ -49,12 +57,21 @@ public class Main {
                     System.out.print("Ingrese palabra o frase 2: ");
                     String palabra2 = scanner.nextLine().trim().toLowerCase();
 
+                    if (palabra1.equals(palabra2)) {
+                        System.out.println("Ingrese palabras distintas, por favor");
+                        continue;
+                    }
+
                     List<Integer> paginasAmbas = avl.buscarInterseccion(palabra1, palabra2); // páginas comunes
 
                     if (paginasAmbas.isEmpty()) {
                         System.out.println("No hay páginas donde aparezcan ambas palabras o frases");
                     } else {
-                        System.out.println("Aparecen ambas palabras o frases en páginas: " + paginasAmbas);
+                        System.out.print("Aparecen ambas palabras o frases en páginas: ");
+                        for (Integer p : paginasAmbas) {
+                            System.out.print(p+" ");
+                        }
+                        System.out.println();
                     }
                 }
 
@@ -65,12 +82,21 @@ public class Main {
                     System.out.print("Ingrese palabra o frase 2: ");
                     String palabra2 = scanner.nextLine().trim().toLowerCase();
 
+                    if (palabra1.equals(palabra2)) {
+                        System.out.println("Ingrese palabras distintas, por favor");
+                        continue;
+                    }
+
                     List<Integer> paginasUnion = avl.buscarUnion(palabra1, palabra2); // combinación de ambas
 
                     if (paginasUnion.isEmpty()) {
                         System.out.println("No hay páginas donde aparezca alguna de las palabras o frases");
                     } else {
-                        System.out.println("Aparece al menos una palabra o frase en páginas: " + paginasUnion);
+                        System.out.print("Aparece al menos una palabra o frase en páginas: ");
+                        for (Integer p : paginasUnion) {
+                            System.out.print(p+" ");
+                        }
+                        System.out.println();
                     }
                 }
 
